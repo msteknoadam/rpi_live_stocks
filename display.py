@@ -1,5 +1,6 @@
 import pygame
 import sys
+import time
 from pygame.locals import *
 
 pygame.init()
@@ -18,9 +19,6 @@ blue = (0, 0, 255)
 # Below line will let you toggle from maximize to the initial size
 DISPLAYSURF = pygame.display.set_mode((X, Y), RESIZABLE)
 font = pygame.font.Font('freesansbold.ttf', 32)
-text = font.render('Hello World', True, green, black)
-textRect = text.get_rect()
-textRect.center = (X // 2, Y // 2)
 
 pygame.display.set_caption("Stocks Watch")
 
@@ -36,6 +34,9 @@ while mainLoop:
             mainLoop = False
 
     DISPLAYSURF.fill((0, 0, 0))
+    text = font.render(f'Current Time: {int(time.time())}', True, green, black)
+    textRect = text.get_rect()
+    textRect.center = (X // 2, Y // 2)
     DISPLAYSURF.blit(text, textRect)
     pygame.display.update()
 
