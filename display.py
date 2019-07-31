@@ -51,23 +51,28 @@ while mainLoop:
             mainLoop = False
 
     DISPLAYSURF.fill(black)
-    timeText = font.render(
-        f'Current Unix Timestamp: {int(time.time())}', True, green, black)
-    timeTextRect = timeText.get_rect()
-    timeTextRect.center = (X // 2, 25)
+    headerText = pygame.font.SysFont('Agency FB', 40, bold=1).render(
+        'Currency Conversion Rates', True, green, black)
+    headerTextRect = headerText.get_rect()
+    headerTextRect.center = (X // 2, 15)
+    footer = pygame.font.SysFont('Agency FB', 20).render(
+        'Made with code by TEKNO', True, green, black)
+    footerRect = footer.get_rect()
+    footerRect.center = (X // 2, 485)
     btcText = font.render(
-        f'BTC-USD: {btc_usd} $', True, green, black)
+        f'BTC-USD: {int(btc_usd * 100) / 100} $', True, green, black)
     btcTextRect = btcText.get_rect()
     btcTextRect.center = ((X // 2) + 75, 100)
     usdText = font.render(
-        f'USD-TRY: {usd_try} ₺', True, green, black)
+        f'USD-TRY: {int(usd_try * 100) / 100} ₺', True, green, black)
     usdTextRect = usdText.get_rect()
     usdTextRect.center = ((X // 2) + 75, 250)
     eurText = font.render(
-        f'EUR-TRY: {eur_try} ₺', True, green, black)
+        f'EUR-TRY: {int(eur_try * 100) / 100} ₺', True, green, black)
     eurTextRect = eurText.get_rect()
     eurTextRect.center = ((X // 2) + 75, 400)
-    DISPLAYSURF.blit(timeText, timeTextRect)
+    DISPLAYSURF.blit(headerText, headerTextRect)
+    DISPLAYSURF.blit(footer, footerRect)
     DISPLAYSURF.blit(btcLogo, (50, 50))
     DISPLAYSURF.blit(usdLogo, (50, 200))
     DISPLAYSURF.blit(eurLogo, (50, 350))
