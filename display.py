@@ -22,6 +22,7 @@ eurLogo = pygame.image.load('eur.png')
 btc_usd = 0
 usd_try = 0
 eur_try = 0
+errorMessage = ""
 
 
 # Initialize some required things for pygame display
@@ -34,7 +35,7 @@ freecurrencyconverteruri = f"http://free.currconv.com/api/v7/convert?q=%s&compac
 pygame.display.set_caption("Stocks Watch")
 
 FETCHPRIECEVENT = pygame.USEREVENT+1
-pygame.time.set_timer(FETCHPRIECEVENT, refreshRateInSeconds * 50)
+pygame.time.set_timer(FETCHPRIECEVENT, refreshRateInSeconds * 1000)
 
 
 def fetchPrices():
@@ -44,14 +45,19 @@ def fetchPrices():
     global btc_usd
     global usd_try
     global eur_try
+    global errorMessage
     exchangeRates = requests.get(
         url=freecurrencyconverteruri % "BTC_USD,USD_TRY,EUR_TRY").json()
-    btc_usd = exchangeRates["BTC_USD"]
-    print(f"BTC - USD Rate: {btc_usd}")
-    usd_try = exchangeRates["USD_TRY"]
-    print(f"USD - TRY Rate: {usd_try}")
-    eur_try = exchangeRates["EUR_TRY"]
-    print(f"EUR - TRY Rate: {eur_try}")
+    if "status" not in exchangeRates.keys():
+        btc_usd = exchangeRates["BTC_USD"]
+        print(f"BTC - USD Rate: {btc_usd}")
+        usd_try = exchangeRates["USD_TRY"]
+        print(f"USD - TRY Rate: {usd_try}")
+        eur_try = exchangeRates["EUR_TRY"]
+        print(f"EUR - TRY Rate: {eur_try}")
+        errorMessage = ""
+    else:
+        errorMessage = exchangeRates
 
 
 fetchPrices()
@@ -78,6 +84,12 @@ while mainLoop:
         'Made with code by TEKNO', True, green, black)
     footerRect = footer.get_rect()
     footerRect.center = (X // 2, 485)
+    if errorMessage != "":
+        errfooter = pygame.font.Font('agency.ttf', 20).render(
+            str(errorMessage), True, red, black)
+        errfooterRect = errfooter.get_rect()
+        errfooterRect.center = (X // 2, 465)
+        DISPLAYSURF.blit(errfooter, errfooterRect)
     btcText = font.render(
         f'BTC-USD: {int(btc_usd * 100) / 100} $', True, green, black)
     btcTextRect = btcText.get_rect()
