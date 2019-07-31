@@ -8,6 +8,7 @@ from APIKEYS import freecurrencyconverterapi
 pygame.init()
 
 # Global variables
+refreshRateInSeconds = 100
 X = 500
 Y = 500
 white = (255, 255, 255)
@@ -20,7 +21,7 @@ usdLogo = pygame.image.load('usd.png')
 eurLogo = pygame.image.load('eur.png')
 
 # Initialize some required things for pygame display
-DISPLAYSURF = pygame.display.set_mode((X, Y), RESIZABLE)
+DISPLAYSURF = pygame.display.set_mode((X, Y), FULLSCREEN)
 font = pygame.font.SysFont('Calibri', 40)
 
 # Request URIs to get current stock exchange rates
@@ -51,7 +52,7 @@ while mainLoop:
 
     DISPLAYSURF.fill(black)
     timeText = font.render(
-        f'Current Time: {int(time.time())}', True, green, black)
+        f'Current Unix Timestamp: {int(time.time())}', True, green, black)
     timeTextRect = timeText.get_rect()
     timeTextRect.center = (X // 2, 25)
     btcText = font.render(
@@ -74,6 +75,6 @@ while mainLoop:
     DISPLAYSURF.blit(usdText, usdTextRect)
     DISPLAYSURF.blit(eurText, eurTextRect)
     pygame.display.update()
-    pygame.time.delay(10000)
+    pygame.time.delay(refreshRateInSeconds * 1000)
 
 pygame.quit()
