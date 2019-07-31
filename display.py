@@ -19,22 +19,31 @@ blue = (0, 0, 255)
 btcLogo = pygame.image.load('bitcoin.png')
 usdLogo = pygame.image.load('usd.png')
 eurLogo = pygame.image.load('eur.png')
+btc_usd = 0
+usd_try = 0
+eur_try = 0
+
 
 # Initialize some required things for pygame display
 DISPLAYSURF = pygame.display.set_mode((X, Y), FULLSCREEN)
-font = pygame.font.SysFont('Calibri', 40)
+font = pygame.font.Font('calibri.ttf', 40)
 
 # Request URIs to get current stock exchange rates
 freecurrencyconverteruri = f"http://free.currconv.com/api/v7/convert?q=%s&compact=ultra&apiKey={freecurrencyconverterapi}"
 
 pygame.display.set_caption("Stocks Watch")
 
-mainLoop = True
+FETCHPRIECEVENT = pygame.USEREVENT+1
+pygame.time.set_timer(FETCHPRIECEVENT, refreshRateInSeconds * 50)
 
-while mainLoop:
-    print("mainLoop start")
+
+def fetchPrices():
     # I hope I will refactor this one time so user just needs to set an array
     # to define which prices to watch and only add their logos, but meh, soon™
+    # Also Python, why do you have to suck? What is this retarded "global" thing??
+    global btc_usd
+    global usd_try
+    global eur_try
     exchangeRates = requests.get(
         url=freecurrencyconverteruri % "BTC_USD,USD_TRY,EUR_TRY").json()
     btc_usd = exchangeRates["BTC_USD"]
@@ -43,7 +52,17 @@ while mainLoop:
     print(f"USD - TRY Rate: {usd_try}")
     eur_try = exchangeRates["EUR_TRY"]
     print(f"EUR - TRY Rate: {eur_try}")
+
+
+fetchPrices()
+
+
+mainLoop = True
+
+while mainLoop:
     for event in pygame.event.get():
+        if event.type == FETCHPRIECEVENT:
+            fetchPrices()
         if event.type == pygame.KEYDOWN:
             if (event.key == pygame.K_ESCAPE):
                 mainLoop = False
@@ -51,11 +70,11 @@ while mainLoop:
             mainLoop = False
 
     DISPLAYSURF.fill(black)
-    headerText = pygame.font.SysFont('Agency FB', 40, bold=1).render(
+    headerText = pygame.font.Font('agency.ttf', 40, bold=1).render(
         'Currency Conversion Rates', True, green, black)
     headerTextRect = headerText.get_rect()
     headerTextRect.center = (X // 2, 15)
-    footer = pygame.font.SysFont('Agency FB', 20).render(
+    footer = pygame.font.Font('agency.ttf', 20).render(
         'Made with code by TEKNO', True, green, black)
     footerRect = footer.get_rect()
     footerRect.center = (X // 2, 485)
@@ -80,6 +99,6 @@ while mainLoop:
     DISPLAYSURF.blit(usdText, usdTextRect)
     DISPLAYSURF.blit(eurText, eurTextRect)
     pygame.display.update()
-    pygame.time.delay(refreshRateInSeconds * 1000)
+    pygame.time.delay(500)
 
 pygame.quit()
