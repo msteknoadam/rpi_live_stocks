@@ -46,18 +46,23 @@ def fetchPrices():
     global usd_try
     global eur_try
     global errorMessage
-    exchangeRates = requests.get(
-        url=freecurrencyconverteruri % "BTC_USD,USD_TRY,EUR_TRY").json()
-    if "status" not in exchangeRates.keys():
-        btc_usd = exchangeRates["BTC_USD"]
-        print(f"BTC - USD Rate: {btc_usd}")
-        usd_try = exchangeRates["USD_TRY"]
-        print(f"USD - TRY Rate: {usd_try}")
-        eur_try = exchangeRates["EUR_TRY"]
-        print(f"EUR - TRY Rate: {eur_try}")
-        errorMessage = ""
+    exchangeRatesRequest = requests.get(
+        url=freecurrencyconverteruri % "BTC_USD,USD_TRY,EUR_TRY")
+    if exchangeRatesRequest.status_code == 200:
+        exchangeRates = exchangeRatesRequest.json()
+        if "status" not in exchangeRates.keys():
+            btc_usd = exchangeRates["BTC_USD"]
+            print(f"BTC - USD Rate: {btc_usd}")
+            usd_try = exchangeRates["USD_TRY"]
+            print(f"USD - TRY Rate: {usd_try}")
+            eur_try = exchangeRates["EUR_TRY"]
+            print(f"EUR - TRY Rate: {eur_try}")
+            errorMessage = ""
+        else:
+            errorMessage = str(exchangeRates) + f" | {int(time.time())}"
     else:
-        errorMessage = exchangeRates
+        errorMessage = f"Error. Conversion API Request Status Code: {exchangeRatesRequest.status_code} | {int(time.time())}"
+        print(errorMessage)
 
 
 fetchPrices()
@@ -86,7 +91,7 @@ while mainLoop:
     footerRect.center = (X // 2, 485)
     if errorMessage != "":
         errfooter = pygame.font.Font('agency.ttf', 20).render(
-            str(errorMessage), True, red, black)
+            errorMessage, True, red, black)
         errfooterRect = errfooter.get_rect()
         errfooterRect.center = (X // 2, 465)
         DISPLAYSURF.blit(errfooter, errfooterRect)
