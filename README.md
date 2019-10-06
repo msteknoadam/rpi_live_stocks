@@ -1,6 +1,6 @@
-# rpi_live_stocks
+# Raspberry Pi Live Stocks
 
-This is the source code which will turn your Raspberry Pi with it's display into a live stock value display (I hope)
+This is the source code which will turn your Raspberry Pi with it's display into a live exchange rates display. Your screen should be at least 500x500 in resolution.
 
 # Initialization
 
