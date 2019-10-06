@@ -3,7 +3,6 @@ import sys
 import time
 import requests
 from pygame.locals import *
-from APIKEYS import freecurrencyconverterapi
 
 pygame.init()
 
@@ -29,8 +28,8 @@ errorMessage = ""
 DISPLAYSURF = pygame.display.set_mode((X, Y), FULLSCREEN)
 font = pygame.font.Font('calibri.ttf', 40)
 
-# Request URIs to get current stock exchange rates
-freecurrencyconverteruri = f"http://free.currconv.com/api/v7/convert?q=%s&compact=ultra&apiKey={freecurrencyconverterapi}"
+# Request URIs to get current stock exchange rates (localhost server will be published soon)
+currencyConverterApiUrl = f"http://localhost:3000/convert?queries=%s"
 
 pygame.display.set_caption("Stocks Watch")
 
@@ -47,19 +46,17 @@ def fetchPrices():
     global eur_try
     global errorMessage
     exchangeRatesRequest = requests.get(
-        url=freecurrencyconverteruri % "BTC_USD,USD_TRY,EUR_TRY")
+        url=currencyConverterApiUrl % "btc-usd,usd-try,eur-try")
     if exchangeRatesRequest.status_code == 200:
         exchangeRates = exchangeRatesRequest.json()
-        if "status" not in exchangeRates.keys():
-            btc_usd = exchangeRates["BTC_USD"]
-            print(f"BTC - USD Rate: {btc_usd}")
-            usd_try = exchangeRates["USD_TRY"]
-            print(f"USD - TRY Rate: {usd_try}")
-            eur_try = exchangeRates["EUR_TRY"]
-            print(f"EUR - TRY Rate: {eur_try}")
-            errorMessage = ""
-        else:
-            errorMessage = str(exchangeRates) + f" | {int(time.time())}"
+        print(exchangeRates)
+        btc_usd = float(exchangeRates["btc-usd"])
+        print(f"BTC - USD Rate: {btc_usd}")
+        usd_try = float(exchangeRates["usd-try"])
+        print(f"USD - TRY Rate: {usd_try}")
+        eur_try = float(exchangeRates["eur-try"])
+        print(f"EUR - TRY Rate: {eur_try}")
+        errorMessage = ""
     else:
         errorMessage = f"Error. Conversion API Request Status Code: {exchangeRatesRequest.status_code} | {int(time.time())}"
         print(errorMessage)
