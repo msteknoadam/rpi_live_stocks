@@ -29,7 +29,7 @@ DISPLAYSURF = pygame.display.set_mode((X, Y), FULLSCREEN)
 font = pygame.font.Font('calibri.ttf', 40)
 
 # Request URIs to get current stock exchange rates (localhost server will be published soon)
-currencyConverterApiUrl = f"http://localhost:3000/convert?queries=%s"
+currencyConverterApiUrl = f"https://api.tekgo.pro/convert?queries=%s"
 
 pygame.display.set_caption("Stocks Watch")
 
