@@ -50,11 +50,20 @@ def fetchPrices():
     if exchangeRatesRequest.status_code == 200:
         exchangeRates = exchangeRatesRequest.json()
         print(exchangeRates)
-        btc_usd = float(exchangeRates["btc-usd"])
+        try:
+            btc_usd = float(exchangeRates["btc-usd"])
+        except:
+            btc_usd = "ERROR"
+        try:
+            usd_try = float(exchangeRates["usd-try"])
+        except:
+            usd_try = "ERROR"
+        try:
+            eur_try = float(exchangeRates["eur-try"])
+        except:
+            eur_try = "ERROR"
         print(f"BTC - USD Rate: {btc_usd}")
-        usd_try = float(exchangeRates["usd-try"])
         print(f"USD - TRY Rate: {usd_try}")
-        eur_try = float(exchangeRates["eur-try"])
         print(f"EUR - TRY Rate: {eur_try}")
         errorMessage = ""
     else:
@@ -92,18 +101,31 @@ while mainLoop:
         errfooterRect = errfooter.get_rect()
         errfooterRect.center = (X // 2, 465)
         DISPLAYSURF.blit(errfooter, errfooterRect)
-    btcText = font.render(
-        f'BTC-USD: {int(btc_usd * 100) / 100} $', True, green, black)
+
+    try:
+        btcText = font.render(
+            f'BTC-USD: {int(btc_usd * 100) / 100} $', True, green, black)
+    except:
+        btcText = font.render(f'BTC-USD: ERROR', True, green, black)
     btcTextRect = btcText.get_rect()
     btcTextRect.center = ((X // 2) + 75, 100)
-    usdText = font.render(
-        f'USD-TRY: {int(usd_try * 100) / 100} ₺', True, green, black)
+
+    try:
+        usdText = font.render(
+            f'USD-TRY: {int(usd_try * 100) / 100} ₺', True, green, black)
+    except:
+        usdText = font.render(f'USD-TRY: ERROR', True, green, black)
     usdTextRect = usdText.get_rect()
     usdTextRect.center = ((X // 2) + 75, 250)
-    eurText = font.render(
-        f'EUR-TRY: {int(eur_try * 100) / 100} ₺', True, green, black)
+
+    try:
+        eurText = font.render(
+            f'EUR-TRY: {int(eur_try * 100) / 100} ₺', True, green, black)
+    except:
+        eurText = font.render(f'EUR-TRY: ERROR', True, green, black)
     eurTextRect = eurText.get_rect()
     eurTextRect.center = ((X // 2) + 75, 400)
+
     DISPLAYSURF.blit(headerText, headerTextRect)
     DISPLAYSURF.blit(footer, footerRect)
     DISPLAYSURF.blit(btcLogo, (50, 50))
