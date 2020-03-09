@@ -62,9 +62,6 @@ def fetchPrices():
             eur_try = float(exchangeRates["eur-try"])
         except:
             eur_try = "ERROR"
-        print(f"BTC - USD Rate: {btc_usd}")
-        print(f"USD - TRY Rate: {usd_try}")
-        print(f"EUR - TRY Rate: {eur_try}")
         errorMessage = ""
     else:
         errorMessage = f"Error. Conversion API Request Status Code: {exchangeRatesRequest.status_code} | {int(time.time())}"
