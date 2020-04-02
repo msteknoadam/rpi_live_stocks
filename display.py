@@ -10,8 +10,8 @@ pygame.init()
 
 # Global variables
 refreshRateInSeconds = 100
-X = 500
-Y = 500
+X = 650
+Y = 650
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
@@ -20,9 +20,11 @@ blue = (0, 0, 255)
 btcLogo = pygame.image.load('bitcoin.png')
 usdLogo = pygame.image.load('usd.png')
 eurLogo = pygame.image.load('eur.png')
+gauLogo = pygame.image.load('gold.png')
 btc_usd = 0
 usd_try = 0
 eur_try = 0
+gau_try = 0
 errorMessage = ""
 
 
@@ -46,9 +48,10 @@ def fetchPrices():
     global btc_usd
     global usd_try
     global eur_try
+    global gau_try
     global errorMessage
     exchangeRatesRequest = requests.get(
-        url=currencyConverterApiUrl % "btc-usd,usd-try,eur-try")
+        url=currencyConverterApiUrl % "btc-usd,usd-try,eur-try,gau-try")
     if exchangeRatesRequest.status_code == 200:
         exchangeRates = exchangeRatesRequest.json()
         print(exchangeRates)
@@ -64,6 +67,10 @@ def fetchPrices():
             eur_try = float(exchangeRates["eur-try"])
         except:
             eur_try = "ERROR"
+        try:
+            gau_try = float(exchangeRates["gau-try"])
+        except:
+            gau_try = "ERROR"
         errorMessage = ""
     else:
         errorMessage = f"Error. Conversion API Request Status Code: {exchangeRatesRequest.status_code} | {int(time.time())}"
@@ -93,12 +100,12 @@ while mainLoop:
     footer = pygame.font.Font('agency.ttf', 20).render(
         'Made with code by TEKNO', True, green, black)
     footerRect = footer.get_rect()
-    footerRect.center = (X // 2, 485)
+    footerRect.center = (X // 2, 635)
     if errorMessage != "":
         errfooter = pygame.font.Font('agency.ttf', 20).render(
             errorMessage, True, red, black)
         errfooterRect = errfooter.get_rect()
-        errfooterRect.center = (X // 2, 465)
+        errfooterRect.center = (X // 2, 615)
         DISPLAYSURF.blit(errfooter, errfooterRect)
 
     try:
@@ -125,14 +132,24 @@ while mainLoop:
     eurTextRect = eurText.get_rect()
     eurTextRect.center = ((X // 2) + 75, 400)
 
+    try:
+        gauText = font.render(
+            f'GAU-TRY: {int(gau_try * 100) / 100} ₺', True, green, black)
+    except:
+        gauText = font.render(f'GAU-TRY: ERROR', True, green, black)
+    gauTextRect = gauText.get_rect()
+    gauTextRect.center = ((X // 2) + 75, 550)
+
     DISPLAYSURF.blit(headerText, headerTextRect)
     DISPLAYSURF.blit(footer, footerRect)
     DISPLAYSURF.blit(btcLogo, (50, 50))
     DISPLAYSURF.blit(usdLogo, (50, 200))
     DISPLAYSURF.blit(eurLogo, (50, 350))
+    DISPLAYSURF.blit(gauLogo, (50, 500))
     DISPLAYSURF.blit(btcText, btcTextRect)
     DISPLAYSURF.blit(usdText, usdTextRect)
     DISPLAYSURF.blit(eurText, eurTextRect)
+    DISPLAYSURF.blit(gauText, gauTextRect)
     pygame.display.update()
     pygame.time.delay(500)
 
