@@ -118,7 +118,7 @@ while mainLoop:
         errfooter = infoFont_small.render(
             errorMessage, True, red, black)
         errfooterRect = errfooter.get_rect()
-        errfooterRect.center = (X // 2, Y - fontSize_small)
+        errfooterRect.center = (X // 2, Y - fontSize_small * 2)
         DISPLAYSURF.blit(errfooter, errfooterRect)
 
     try:
