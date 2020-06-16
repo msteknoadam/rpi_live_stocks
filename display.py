@@ -45,7 +45,7 @@ errorMessage = ""
 # Initialize some required things for pygame display
 DISPLAYSURF = pygame.display.set_mode((X, Y), FULLSCREEN)
 
-# Request URIs to get current stock exchange rates (localhost server will be published soon)
+# Request URIs to get current stock exchange rates (localhost server will be published Soon™)
 currencyConverterApiUrl = f"https://api.tekno.icu/convert?q=%s"
 
 pygame.display.set_caption("Stocks Watch")
